@@ -42,6 +42,7 @@ jobs:
             libtool autoconf automake \
             libxml2-dev libxslt1-dev \
             libjpeg-dev libfreetype6-dev
+          git --version
 
       - name: Install Android SDK Commandline Tools
         run: |
@@ -52,7 +53,7 @@ jobs:
 
       - name: Install Android SDK packages
         run: |
-          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
           yes | sdkmanager --licenses
           sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
@@ -62,9 +63,8 @@ jobs:
           pip install buildozer cython==0.29.36
 
       - name: Build APK (debug)
-        env:
-          PATH: $ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/33.0.2:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:${{ env.PATH }}
         run: |
+          export PATH="$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/33.0.2:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
           buildozer -v android debug
 
       - name: Upload APK
